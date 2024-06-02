@@ -3,7 +3,7 @@
 
 void DefaultPrinter::DrawWhiteCell(CPaintDC& dc, CRect rect) {
 	CBrush brush;
-	brush.CreateSolidBrush(RGB(230, 255, 230));
+	brush.CreateSolidBrush(RGB(255, 255, 240));
 	HGDIOBJ oldBrush = dc.SelectObject(brush);
 	dc.Rectangle(rect);
 	dc.SelectObject(oldBrush);
@@ -12,7 +12,7 @@ void DefaultPrinter::DrawWhiteCell(CPaintDC& dc, CRect rect) {
 
 void DefaultPrinter::DrawBlackCell(CPaintDC& dc, CRect rect) {
 	CBrush brush;
-	brush.CreateSolidBrush(RGB(230, 255, 230));
+	brush.CreateSolidBrush(RGB(153, 255, 153));
 	HGDIOBJ oldBrush = dc.SelectObject(brush);
 	dc.Rectangle(rect);
 	dc.SelectObject(oldBrush);
@@ -23,7 +23,9 @@ void DefaultPrinter::DrawWhiteChecker(CPaintDC& dc, CRect rect) {
 	CPen pen;
 	pen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
-	HGDIOBJ oldBrush = dc.SelectObject(GetStockObject(HOLLOW_BRUSH));
+	CBrush brush;
+	brush.CreateSolidBrush(RGB(255, 255, 255));
+	HGDIOBJ oldBrush = dc.SelectObject(brush);
 	dc.Ellipse(rect.left + 4, rect.top + 4, rect.right - 4, rect.bottom - 4);
 	dc.SelectObject(oldPen);
 	dc.SelectObject(oldBrush);
@@ -34,7 +36,9 @@ void DefaultPrinter::DrawWhiteKingChecker(CPaintDC& dc, CRect rect) {
 	CPen pen;
 	pen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
-	HGDIOBJ oldBrush = dc.SelectObject(GetStockObject(HOLLOW_BRUSH));
+	CBrush brush;
+	brush.CreateSolidBrush(RGB(240, 240, 240));
+	HGDIOBJ oldBrush = dc.SelectObject(brush);
 	dc.Ellipse(rect.left + 4, rect.top + 4, rect.right - 4, rect.bottom - 4);
 	dc.SelectObject(oldPen);
 	dc.SelectObject(oldBrush);
@@ -45,7 +49,9 @@ void DefaultPrinter::DrawBlackChecker(CPaintDC& dc, CRect rect) {
 	CPen pen;
 	pen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
-	HGDIOBJ oldBrush = dc.SelectObject(GetStockObject(HOLLOW_BRUSH));
+	CBrush brush;
+	brush.CreateSolidBrush(RGB(255, 0, 0));
+	HGDIOBJ oldBrush = dc.SelectObject(brush);
 	dc.Ellipse(rect.left + 4, rect.top + 4, rect.right - 4, rect.bottom - 4);
 	dc.SelectObject(oldPen);
 	dc.SelectObject(oldBrush);
@@ -56,7 +62,9 @@ void DefaultPrinter::DrawBlackKingChecker(CPaintDC& dc, CRect rect) {
 	CPen pen;
 	pen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
-	HGDIOBJ oldBrush = dc.SelectObject(GetStockObject(HOLLOW_BRUSH));
+	CBrush brush;
+	brush.CreateSolidBrush(RGB(255, 10, 10));
+	HGDIOBJ oldBrush = dc.SelectObject(brush);
 	dc.Ellipse(rect.left + 4, rect.top + 4, rect.right - 4, rect.bottom - 4);
 	dc.SelectObject(oldPen);
 	dc.SelectObject(oldBrush);

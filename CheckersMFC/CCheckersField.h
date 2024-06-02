@@ -1,5 +1,6 @@
 #pragma once
 #include "Board.h"
+#include "Printer.h"
 
 // CCheckersField
 
@@ -11,6 +12,7 @@ public:
 	CCheckersField();
 	virtual ~CCheckersField();
 	afx_msg void OnPaint();
+	
 protected:
 	DECLARE_MESSAGE_MAP()
 private:
@@ -18,11 +20,14 @@ private:
 	int fieldYSize;
 	int nSelectedX;
 	int nSelectedY;
+	Printer* printer;
+
 	BOOL RegisterClass();
 	Board* board;
 	CRect GetRectFromField(int x, int y);
 	CPoint GetFieldPosition(CPoint point);
 	void HighlightSelection(CPaintDC& dc);
+	void DrawChecker(Tile* tile, CPaintDC& dc, CRect rect);
 public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnMouseLeave();

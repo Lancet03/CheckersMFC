@@ -4,6 +4,10 @@
 #include "pch.h"
 #include "CheckersMFC.h"
 #include "CCheckersField.h"
+#include "DefaultPrinter.h"
+#include "Checker.h"
+
+#include <typeinfo>
 
 #define CHECKERSFIELD_CLASSNAME L"CheckersField"
 #define FIELDNUMBERSPACE 20
@@ -18,6 +22,8 @@ CCheckersField::CCheckersField()
 	this->fieldYSize = this->board->cells[0].size();
 	this->nSelectedX = -1;
 	this->nSelectedY = -1;
+
+	this->printer = new DefaultPrinter();
 	this->RegisterClass();
 }
 
@@ -68,6 +74,7 @@ void CCheckersField::OnPaint()
 	// TODO: Add your message handler code here
 	// Do not call CWnd::OnPaint() for painting messages
 
+
 	CRect rect;
 	GetClientRect(&rect);
 
@@ -85,7 +92,7 @@ void CCheckersField::OnPaint()
 
 	int hPartSize = (rect.right - 2 * FIELDNUMBERSPACE) / this->fieldXSize;
 	int vPartSize = (rect.bottom - 2 * FIELDNUMBERSPACE) / this->fieldYSize;
-	this->HighlightSelection(dc);
+	
 	for (int i = 0; i < this->fieldXSize; i++) {
 		CString st;
 		std::string str;
@@ -101,17 +108,59 @@ void CCheckersField::OnPaint()
 		dc.TextOutW(0, FIELDNUMBERSPACE + vPartSize / 2 + i * vPartSize - fontWidth * 3, st);
 		dc.TextOutW(rect.right - FIELDNUMBERSPACE + fontWidth * 3, FIELDNUMBERSPACE + vPartSize / 2 + i * vPartSize - fontWidth * 3, st);
 	}
-	for (int i = 0; i < this->fieldXSize + 1; i++) {
+	/*for (int i = 0; i < this->fieldXSize + 1; i++) {
 		dc.MoveTo(FIELDNUMBERSPACE + i * hPartSize, FIELDNUMBERSPACE);
 		dc.LineTo(FIELDNUMBERSPACE + i * hPartSize, this->fieldYSize * vPartSize + FIELDNUMBERSPACE);
 	}
 	for (int i = 0; i < this->fieldYSize + 1; i++) {
 		dc.MoveTo(FIELDNUMBERSPACE, i * vPartSize + FIELDNUMBERSPACE);
 		dc.LineTo(FIELDNUMBERSPACE + (this->fieldXSize)*hPartSize, i * vPartSize + FIELDNUMBERSPACE);
+	}*/
+	for (int row = 0; row < this->fieldYSize; row++) {
+		for (int col = 0; col < this->fieldXSize; col++) {
+			CRect cellRect = this->GetRectFromField(col, row);
+			if ((row + col) % 2 == 0) {	
+				this->printer->DrawWhiteCell(dc, cellRect);
+			}
+			else {
+				this->printer->DrawBlackCell(dc, cellRect);
+			}
+		}
+	}
+
+	this->HighlightSelection(dc);
+
+	for (int row = 0; row < this->fieldYSize; row++) {
+		for (int col = 0; col < this->fieldXSize; col++) {
+			CRect cellRect = this->GetRectFromField(col, row);
+			this->DrawChecker(this->board->cells[row][col], dc, cellRect);
+		}
 	}
 
 	dc.SelectObject(oldPen);
 	pen.DeleteObject();
+}
+
+void CCheckersField::DrawChecker(Tile* tile, CPaintDC& dc, CRect rect) {
+	if (typeid(*tile) == typeid(Checker)) {
+		Checker* checker = (Checker*)tile;
+		if (checker->player == White) {
+			if (checker->king) {
+				this->printer->DrawWhiteKingChecker(dc, rect);
+			}
+			else {
+				this->printer->DrawWhiteChecker(dc, rect);
+			}
+		}
+		else if (checker->player == Black) {
+			if (checker->king) {
+				this->printer->DrawBlackKingChecker(dc, rect);
+			}
+			else {
+				this->printer->DrawBlackChecker(dc, rect);
+			}
+		}
+	}
 }
 
 CRect CCheckersField::GetRectFromField(int x, int y) {
@@ -120,10 +169,10 @@ CRect CCheckersField::GetRectFromField(int x, int y) {
 	GetClientRect(&rectWnd);
 	int hPartSize = (rectWnd.right - 2 * FIELDNUMBERSPACE) / this->fieldXSize;
 	int vPartSize = (rectWnd.bottom - 2 * FIELDNUMBERSPACE) / this->fieldYSize;
-	rect.left = FIELDNUMBERSPACE + x * hPartSize + 1;
-	rect.top = FIELDNUMBERSPACE + y * vPartSize + 1;
-	rect.right = FIELDNUMBERSPACE + ((x + 1) * hPartSize) - 1;
-	rect.bottom = FIELDNUMBERSPACE + ((y + 1) * vPartSize) - 1;
+	rect.left = FIELDNUMBERSPACE + x * hPartSize;
+	rect.top = FIELDNUMBERSPACE + y * vPartSize;
+	rect.right = FIELDNUMBERSPACE + ((x + 1) * hPartSize);
+	rect.bottom = FIELDNUMBERSPACE + ((y + 1) * vPartSize);
 	// TODO: Добавьте сюда код реализации.
 	return rect;
 }
