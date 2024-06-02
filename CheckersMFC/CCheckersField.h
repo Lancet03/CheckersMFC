@@ -26,11 +26,12 @@ private:
 	Board* board;
 	CRect GetRectFromField(int x, int y);
 	CPoint GetFieldPosition(CPoint point);
-	void HighlightSelection(CPaintDC& dc);
-	void DrawChecker(Tile* tile, CPaintDC& dc, CRect rect);
+	void HighlightSelection(CDC& dc);
+	void DrawChecker(Tile* tile, CDC& dc, CRect rect);
 public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnMouseLeave();
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };
 
 
