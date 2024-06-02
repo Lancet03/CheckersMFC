@@ -1,6 +1,7 @@
 #pragma once
 #include "Board.h"
 #include "Printer.h"
+#include "Checker.h"
 
 // CCheckersField
 
@@ -22,6 +23,8 @@ private:
 	int nSelectedY;
 	Printer* printer;
 
+	Checker* selectedChecker = nullptr;
+
 	BOOL RegisterClass();
 	Board* board;
 	CRect GetRectFromField(int x, int y);
@@ -32,6 +35,7 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnMouseLeave();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 
 

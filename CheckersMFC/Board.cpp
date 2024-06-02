@@ -325,6 +325,8 @@ void Board::ChangePlayerTurn() {
 		this->playerTurn = 1;
 	}
 	this->CheckIfJumpExists();
+
+	this->DeselectAllCheckers();
 }
 
 bool Board::CheckIfPlayerHasSelectedCheckers() {

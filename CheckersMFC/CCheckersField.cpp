@@ -6,8 +6,10 @@
 #include "CCheckersField.h"
 #include "DefaultPrinter.h"
 #include "Checker.h"
+#include "EmptyCell.h"
 
 #include <typeinfo>
+#include <vector>
 
 #define CHECKERSFIELD_CLASSNAME L"CheckersField"
 #define FIELDNUMBERSPACE 20
@@ -37,6 +39,7 @@ BEGIN_MESSAGE_MAP(CCheckersField, CWnd)
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSELEAVE()
 	ON_WM_ERASEBKGND()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -97,7 +100,7 @@ void CCheckersField::OnPaint()
 
 	int hPartSize = (rect.right - 2 * FIELDNUMBERSPACE) / this->fieldXSize;
 	int vPartSize = (rect.bottom - 2 * FIELDNUMBERSPACE) / this->fieldYSize;
-	
+
 	for (int i = 0; i < this->fieldXSize; i++) {
 		CString st;
 		std::string str;
@@ -114,14 +117,33 @@ void CCheckersField::OnPaint()
 		memDC.TextOutW(rect.right - FIELDNUMBERSPACE + fontWidth * 3, FIELDNUMBERSPACE + vPartSize / 2 + i * vPartSize - fontWidth * 3, st);
 	}
 
+
+	std::vector<EmptyCell*> availableToMoveCells = {};
+	if (this->selectedChecker != nullptr) {
+		availableToMoveCells = this->selectedChecker->GetTilesAvailable();
+	}
 	for (int row = 0; row < this->fieldYSize; row++) {
 		for (int col = 0; col < this->fieldXSize; col++) {
 			CRect cellRect = this->GetRectFromField(col, row);
-			if ((row + col) % 2 == 0) {	
-				this->printer->DrawWhiteCell(memDC, cellRect);
+
+			bool cellPrinted = false;
+			for (int i = 0; i < availableToMoveCells.size(); i++) {
+				EmptyCell* availableToMoveCell = availableToMoveCells[i];
+				if (availableToMoveCell->position.first == col && availableToMoveCell->position.second == row) {
+					this->printer->DrawAvailableToMoveCell(memDC, cellRect);
+					cellPrinted = true;
+					break;
+				}
 			}
-			else {
-				this->printer->DrawBlackCell(memDC, cellRect);
+
+			if (!cellPrinted)
+			{
+				if ((row + col) % 2 == 0) {
+					this->printer->DrawWhiteCell(memDC, cellRect);
+				}
+				else {
+					this->printer->DrawBlackCell(memDC, cellRect);
+				}
 			}
 		}
 	}
@@ -147,18 +169,38 @@ void CCheckersField::DrawChecker(Tile* tile, CDC& dc, CRect rect) {
 		Checker* checker = (Checker*)tile;
 		if (checker->player == White) {
 			if (checker->king) {
-				this->printer->DrawWhiteKingChecker(dc, rect);
+				if (checker->selected) {
+					this->printer->DrawSelectedWhiteKingChecker(dc, rect);
+				}
+				else {
+					this->printer->DrawWhiteKingChecker(dc, rect);
+				}
 			}
 			else {
-				this->printer->DrawWhiteChecker(dc, rect);
+				if (checker->selected) {
+					this->printer->DrawSelectedWhiteChecker(dc, rect);
+				}
+				else {
+					this->printer->DrawWhiteChecker(dc, rect);
+				}
 			}
 		}
 		else if (checker->player == Black) {
 			if (checker->king) {
-				this->printer->DrawBlackKingChecker(dc, rect);
+				if (checker->selected) {
+					this->printer->DrawSelectedBlackKingChecker(dc, rect);
+				}
+				else {
+					this->printer->DrawBlackKingChecker(dc, rect);
+				}
 			}
 			else {
-				this->printer->DrawBlackChecker(dc, rect);
+				if (checker->selected) {
+					this->printer->DrawSelectedBlackChecker(dc, rect);
+				}
+				else {
+					this->printer->DrawBlackChecker(dc, rect);
+				}
 			}
 		}
 	}
@@ -257,4 +299,80 @@ BOOL CCheckersField::OnEraseBkgnd(CDC* pDC)
 
 	//return CWnd::OnEraseBkgnd(pDC);
 	return TRUE;
+}
+
+
+void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	int x, y;
+	CRect rect;
+	GetClientRect(&rect);
+
+
+	if (point.x > FIELDNUMBERSPACE && point.y > FIELDNUMBERSPACE && point.x < rect.right - FIELDNUMBERSPACE && point.y < rect.bottom - FIELDNUMBERSPACE) {
+		CPoint p = this->GetFieldPosition(point);
+
+		if (this->selectedChecker != nullptr) {
+			EmptyCell* chosenCell = this->board->GetEmptyCell(p.x, p.y);
+
+			if (!this->board->continuousJump) {
+				this->board->DeselectAllCheckers();
+			}
+
+			if (chosenCell == nullptr) {
+				this->board->DeselectAllCheckers();
+				this->selectedChecker = nullptr;
+			}
+			else {
+				MoveTypes inRange = chosenCell->InRange(selectedChecker);
+				if (inRange != MoveTypes::Wrong) {
+					if (inRange == MoveTypes::Jump) {
+						if (selectedChecker->OpponentJump(chosenCell->position.first, chosenCell->position.second)) {
+							selectedChecker->Move(chosenCell->position.first, chosenCell->position.second);
+							if (selectedChecker->CanJumpAny()) {
+								selectedChecker->selected = true;
+								this->board->continuousJump = true;
+							}
+							else {
+								this->board->ChangePlayerTurn();
+								this->selectedChecker = nullptr;
+							}
+							//return true;
+						}
+					}
+					else if (inRange == MoveTypes::RegularMove && !this->board->jumpExist) {
+						if (!selectedChecker->CanJumpAny()) {
+							selectedChecker->Move(chosenCell->position.first, chosenCell->position.second);
+							this->board->ChangePlayerTurn();
+							this->selectedChecker = nullptr;
+							//return true;
+						}
+					}
+				}
+			}
+		}
+		else {
+			Checker* chosenChecker = nullptr;
+			bool hasSelectedChecker = this->board->CheckIfPlayerHasSelectedCheckers();
+
+			if (hasSelectedChecker) {
+				chosenChecker = this->board->GetSelectedChecker();
+			}
+			else {
+				chosenChecker = this->board->GetChecker(p.x, p.y);
+			}
+
+			if ((!this->board->continuousJump || hasSelectedChecker) && chosenChecker != nullptr && chosenChecker->allowedToMove) {
+				this->board->DeselectAllCheckers();
+				this->selectedChecker = chosenChecker;
+				this->selectedChecker->selected = true;
+			}
+		}
+
+		this->Invalidate();
+	}
+
+	CWnd::OnLButtonDown(nFlags, point);
 }

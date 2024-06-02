@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BoardTile.h"
-//#include "Printer.h"
 #include "EmptyCell.h"
 #include "Checker.h"
 
@@ -30,8 +29,6 @@ private:
 		{Black, Empty, Black, Empty, Black, Empty, Black, Empty}
 	};
 
-	//Printer printer;
-
 	bool isVictory;
 public:
 	Score score;
@@ -46,18 +43,14 @@ public:
 	std::vector <std::vector<Tile*>> cells;
 	std::vector <EmptyCell*> emptyCells;
 	std::vector <Checker*> checkers;
-	
-	void Show();
+
 	bool CheckLegal(int xpos, int ypos);
 	bool CheckEndCondition();
 	bool IsVictory();
 
-	void PrintCell(int row, int col);
-
 	bool IsValidPlaceToMove(int row, int col);
 	void ChangePlayerTurn();
 	int CheckIfSomeoneWon();
-	void Clear();
 
 	void CheckIfJumpExists();
 	bool CheckIfPositionOnBoard(int x, int y);
