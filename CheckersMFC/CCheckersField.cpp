@@ -47,8 +47,6 @@ END_MESSAGE_MAP()
 // CCheckersField message handlers
 
 
-
-
 BOOL CCheckersField::RegisterClass()
 {
 	WNDCLASS wndcls;
@@ -223,7 +221,6 @@ CRect CCheckersField::GetRectFromField(int x, int y) {
 void CCheckersField::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
-	//int x, y;
 	CPoint p = this->GetFieldPosition(point);
 	if ((this->nSelectedX != p.x) || (this->nSelectedY != p.y)) {
 		this->nSelectedX = p.x;

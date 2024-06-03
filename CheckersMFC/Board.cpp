@@ -82,68 +82,6 @@ Board::~Board()
 	cells.clear();
 }
 
-//void Board::Show()
-//{
-//	this->printer.PrintTilesInfo();
-//
-//	std::cout << std::endl;
-//
-//	std::cout << "  ";
-//	char rowId = 'A';
-//	for (int j = 0; j < this->tiles.size(); j++) {
-//		std::cout << rowId++ << " ";
-//	}
-//	std::cout << std::endl;
-//
-//	for (int row = 0; row < this->tiles.size(); row++)
-//	{
-//		std::cout << row + 1 << " ";
-//
-//		for (int col = 0; col < this->tiles[row].size(); col++) {
-//			this->PrintCell(row, col);
-//		}
-//
-//		std::cout << std::endl;
-//	}
-//
-//}
-
-//void Board::PrintCell(int row, int col) {
-//	Tile* tile = this->cells[row][col];
-//
-//	if (typeid(*tile) == typeid(Checker)) {
-//		Checker* checker = (Checker*)tile;
-//		if (checker->player == White) {
-//			if (checker->king) {
-//				this->printer.PrintWhiteKingChecker();
-//			}
-//			else {
-//				this->printer.PrintWhiteChecker();
-//			}
-//
-//			return;
-//		}
-//		else if (checker->player == Black) {
-//			if (checker->king) {
-//				this->printer.PrintBlackKingChecker();
-//			}
-//			else {
-//				this->printer.PrintBlackChecker();
-//			}
-//			
-//			return;
-//		}
-//	}
-//	else if (typeid(*tile) == typeid(EmptyCell)) {
-//		if ((tile->position.first + tile->position.second) % 2 == 0) {
-//			this->printer.PrintWhiteEmptyCell();
-//		}
-//		else {
-//			this->printer.PrintBlackEmptyCell();
-//		}
-//	}
-//}
-
 Checker* Board::GetChecker(int x, int y) {
 	if (this->CheckIfPositionOnBoard(x, y) && this->CheckIfCheckerOnPosition(x, y)) {
 		Checker* checker = (Checker*)this->cells[y][x];
