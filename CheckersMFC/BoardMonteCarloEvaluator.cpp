@@ -28,8 +28,8 @@ void BoardMonteCarloEvaluator::EvaluateBoard() {
 	RandomPlayer* currentPlayer;
 	bool bGameFinished = false;
 
-	p1->SetupPlayer("RandomP1", BoardTile::White);
-	p2->SetupPlayer("RandomP2", BoardTile::Black);
+	p1->SetupPlayer(L"RandomP1", BoardTile::White);
+	p2->SetupPlayer(L"RandomP2", BoardTile::Black);
 	p1->SetBoard(b);
 	p2->SetBoard(b);
 	currentPlayer = (this->startCheckerType == BoardTile::White) ? p1 : p2;

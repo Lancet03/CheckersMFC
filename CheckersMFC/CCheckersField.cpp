@@ -8,12 +8,16 @@
 #include "Checker.h"
 #include "EmptyCell.h"
 #include "CCheckersField.h"
+#include "CheckersMFCDlg.h"
+#include "HumanPlayer.h"
+#include "ComputerPlayer.h"
 
 #include <typeinfo>
 #include <vector>
 
 #define CHECKERSFIELD_CLASSNAME L"CheckersField"
 #define FIELDNUMBERSPACE 20
+#define TIMER_ID 101
 // CCheckersField
 
 IMPLEMENT_DYNAMIC(CCheckersField, CWnd)
@@ -43,6 +47,7 @@ BEGIN_MESSAGE_MAP(CCheckersField, CWnd)
 	ON_WM_MOUSELEAVE()
 	ON_WM_ERASEBKGND()
 	ON_WM_LBUTTONDOWN()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -217,7 +222,7 @@ CRect CCheckersField::GetRectFromField(int x, int y) {
 	rect.top = FIELDNUMBERSPACE + y * vPartSize;
 	rect.right = FIELDNUMBERSPACE + ((x + 1) * hPartSize);
 	rect.bottom = FIELDNUMBERSPACE + ((y + 1) * vPartSize);
-	// TODO: Добавьте сюда код реализации.
+	
 	return rect;
 }
 
@@ -379,4 +384,62 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CCheckersField::SetGameParent(CCheckersMFCDlg* p) {
 	this->gameParent = p;
+}
+
+void CCheckersField::SetGameInProgress(bool inProgress) {
+	if (this->bGameInProgress != inProgress) {
+		this->bGameInProgress = inProgress;
+		this->gameParent->SetGameInProgress(inProgress);
+		if (inProgress) {
+			SetTimer(TIMER_ID, 1000, NULL);
+		}
+		else {
+			KillTimer(TIMER_ID);
+		}
+	}
+}
+
+bool CCheckersField::CheckEndCondition() {
+	Board* boart = this->gameParent->GetBoard();
+	if (board->CheckEndCondition()) {
+		if (board->IsVictory()) {
+			CString str;
+			int wonPlayer = board->CheckIfSomeoneWon();
+			Player* p1 = this->gameParent->GetPlayer1();
+			Player* p2 = this->gameParent->GetPlayer2();
+			str.Format(L"Игрок %s победил!", wonPlayer == p1->cellType ? p1->GetName() : p2->GetName());
+			AfxMessageBox(str);
+		}
+		else {
+			AfxMessageBox(L"Ничья");
+		}
+		return true;
+	}
+	
+	return false;
+}
+
+
+void CCheckersField::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+	Player* currentPlayer = this->gameParent->GetCurrentPlayer();
+
+	if (this->bGameInProgress && typeid(*currentPlayer) == typeid(ComputerPlayer)) {
+		if ((this->gameParent == nullptr) || (this->gameParent->GetBoard() == nullptr)) {
+			return;
+		}
+
+		if (currentPlayer->MakeMove() == true) {
+			if (this->CheckEndCondition()) {
+				this->SetGameInProgress(false);
+				this->gameParent->Invalidate();
+			}
+			else {
+				this->gameParent->ChangePlayer();
+			}
+		}
+	}
+
+	CWnd::OnTimer(nIDEvent);
 }

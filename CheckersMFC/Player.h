@@ -8,14 +8,14 @@ class Player
 {
 protected:
 	Board* board;
-	std::string name;
+	CString name;
 public:
 	BoardTile cellType;
 	Player();
 	virtual ~Player();
-	void SetupPlayer(std::string name, BoardTile cellType);
+	void SetupPlayer(CString name, BoardTile cellType);
 	void SetBoard(Board* board);
 	virtual bool MakeMove() = 0;
-	std::string GetName();
+	CString GetName();
 };
 

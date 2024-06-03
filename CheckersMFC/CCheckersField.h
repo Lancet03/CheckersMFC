@@ -2,11 +2,10 @@
 #include "Board.h"
 #include "Printer.h"
 #include "Checker.h"
-//#include "CheckersMFCDlg.h"
 
 // CCheckersField
-class CCheckersMFCDlg;
 
+class CCheckersMFCDlg;
 class CCheckersField : public CWnd
 {
 	DECLARE_DYNAMIC(CCheckersField)
@@ -19,7 +18,7 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 
-	CCheckersMFCDlg* gameParent;
+	
 private:
 	int fieldXSize;
 	int fieldYSize;
@@ -28,8 +27,8 @@ private:
 	Printer* printer;
 
 	Checker* selectedChecker = nullptr;
-
-
+	bool bGameInProgress = false;
+	CCheckersMFCDlg* gameParent;
 
 	BOOL RegisterClass();
 	Board* board;
@@ -43,6 +42,9 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	void SetGameParent(CCheckersMFCDlg* p);
+	void SetGameInProgress(bool inProgress);
+	bool CheckEndCondition();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 

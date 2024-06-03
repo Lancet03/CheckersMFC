@@ -12,7 +12,7 @@ Player::~Player() {
 
 }
 
-void Player::SetupPlayer(std::string name, BoardTile cellType) {
+void Player::SetupPlayer(CString name, BoardTile cellType) {
 	this->name = name;
 	this->cellType = cellType;
 }
@@ -22,6 +22,6 @@ void Player::SetBoard(Board* board)
 	this->board = board;
 }
 
-std::string Player::GetName() {
+CString Player::GetName() {
 	return this->name;
 }

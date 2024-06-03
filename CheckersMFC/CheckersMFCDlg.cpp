@@ -8,6 +8,10 @@
 #include "CheckersMFCDlg.h"
 #include "afxdialogex.h"
 #include "CStartupDialog.h"
+#include "HumanPlayer.h"
+#include "ComputerPlayer.h"
+#include "BoardTile.h"
+#include "CCheckersField.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -20,14 +24,22 @@
 
 CCheckersMFCDlg::CCheckersMFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CHECKERSMFC_DIALOG, pParent)
+	, strPlayerTurn(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	
+	this->board = nullptr;
+	this->player1 = nullptr;
+	this->player2 = nullptr;
+	this->currentPlayer = nullptr;
 }
 
 void CCheckersMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_CHECKERSFIELD, this->checkersField);
+	DDX_Control(pDX, IDC_OPENSTARTUP, mStartStopButton);
+	DDX_Text(pDX, IDC_CURRENTPLAYER, strPlayerTurn);
 }
 
 BEGIN_MESSAGE_MAP(CCheckersMFCDlg, CDialogEx)
@@ -36,6 +48,7 @@ BEGIN_MESSAGE_MAP(CCheckersMFCDlg, CDialogEx)
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSELEAVE()
 	ON_BN_CLICKED(IDC_OPENSTARTUP, &CCheckersMFCDlg::OnBnClickedOpenstartup)
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -114,11 +127,105 @@ void CCheckersMFCDlg::OnMouseLeave()
 void CCheckersMFCDlg::OnBnClickedOpenstartup()
 {
 	// TODO: Add your control notification handler code here
-	CStartupDialog sdlg;
-	sdlg.SetDlgParent(this);
-	int nRes = sdlg.DoModal();
+	
 
-	if (nRes == IDOK) {
-
+	if (this->bGameInProcess) {
+		this->Cleanup();
+		this->SetGameInProgress(false);
+		this->Invalidate();
 	}
+	else {
+		CStartupDialog sdlg;
+		sdlg.SetDlgParent(this);
+		int nRes = sdlg.DoModal();
+
+		if (nRes == IDOK) {
+			this->currentPlayer = this->player1;
+			this->SetGameInProgress(true);
+			this->UpdateName();
+			this->Invalidate();
+		}
+	}
+}
+
+
+void CCheckersMFCDlg::CreateBoard() {
+	this->board = new Board();
+}
+
+void CCheckersMFCDlg::CreatePlayer1(CString name, int type) {
+	if (type == 0) {
+		this->player1 = new HumanPlayer();
+	}
+	else {
+		this->player1 = new ComputerPlayer();
+	}
+	this->player1->SetupPlayer(name, BoardTile::White);
+	this->player1->SetBoard(this->board);
+
+}
+
+void CCheckersMFCDlg::CreatePlayer2(CString name, int type) {
+	if (type == 0) {
+		this->player2 = new HumanPlayer();
+	}
+	else {
+		this->player2 = new ComputerPlayer();
+	}
+	this->player2->SetupPlayer(name, BoardTile::Black);
+	this->player2->SetBoard(this->board);
+}
+
+void CCheckersMFCDlg::SetGameInProgress(bool inProgress) {
+	this->bGameInProcess = inProgress;
+	if (inProgress) {
+		this->mStartStopButton.SetWindowTextW(L"Остановить");
+	}
+	else {
+		this->mStartStopButton.SetWindowTextW(L"Запустить");
+
+		this->Cleanup();
+	}
+}
+
+void CCheckersMFCDlg::Cleanup() {
+	if (this->player1 != nullptr) {
+		delete this->player1;
+		this->player1 = nullptr;
+	}
+	if (this->player2 != nullptr) {
+		delete this->player2;
+		this->player2 = nullptr;
+	}
+	if (this->board != nullptr) {
+		delete this->board;
+		this->board = nullptr;
+	}
+	this->currentPlayer = nullptr;
+}
+
+
+void CCheckersMFCDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+	// TODO: Add your message handler code here
+	this->Cleanup();
+}
+
+void CCheckersMFCDlg::UpdateName() {
+	CString str;
+	str.Format(L"Ход игрока: %s", this->currentPlayer->GetName());
+	this->strPlayerTurn = str;
+	UpdateData(FALSE);
+}
+
+void CCheckersMFCDlg::ChangePlayer() {
+	if (this->currentPlayer != this->player1) {
+		this->currentPlayer = this->player1;
+	}
+	else {
+		this->currentPlayer = this->player2;
+	}
+
+	this->UpdateName();
 }

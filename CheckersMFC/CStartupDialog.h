@@ -34,9 +34,6 @@ public:
 	afx_msg void OnBnClickedStartbutton();
 
 	void SetDlgParent(CCheckersMFCDlg* p);
-	void CreateBoard();
-	void CreatePlayer1(CString name, int type);
-	void CreatePlayer2(CString name, int type);
-private:
+	private:
 	CCheckersMFCDlg* dlgParent;
 };

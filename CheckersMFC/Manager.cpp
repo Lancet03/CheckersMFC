@@ -17,7 +17,7 @@ Manager::~Manager() {
 }
 
 bool Manager::Init() {
-	this->board = new Board();
+	/*this->board = new Board();
 	std::string playerName;
 	int playerType;
 
@@ -55,7 +55,7 @@ bool Manager::Init() {
 
 	this->p1->SetBoard(this->board);
 	this->p2->SetBoard(this->board);
-	this->currentPlayer = this->p1;
+	this->currentPlayer = this->p1;*/
 
 	return true;
 }

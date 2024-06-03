@@ -80,6 +80,9 @@ void CStartupDialog::OnBnClickedStartbutton()
 		return;
 	}
 
+	this->dlgParent->CreateBoard();
+	this->dlgParent->CreatePlayer1(this->strPlayerName1, mTypePlayer1.GetCurSel());
+	this->dlgParent->CreatePlayer2(this->strPlayerName2, mTypePlayer2.GetCurSel());
 	this->EndDialog(IDOK);
 }
 
@@ -87,14 +90,3 @@ void CStartupDialog::SetDlgParent(CCheckersMFCDlg* p) {
 	this->dlgParent = p;
 }
 
-void CStartupDialog::CreateBoard() {
-
-}
-
-void CStartupDialog::CreatePlayer1(CString name, int type) {
-
-}
-
-void CStartupDialog::CreatePlayer2(CString name, int type) {
-
-}
