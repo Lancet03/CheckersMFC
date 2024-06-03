@@ -31,7 +31,7 @@ private:
 	CCheckersMFCDlg* gameParent;
 
 	BOOL RegisterClass();
-	Board* board;
+	//Board* board;
 	CRect GetRectFromField(int x, int y);
 	CPoint GetFieldPosition(CPoint point);
 	void HighlightSelection(CDC& dc);

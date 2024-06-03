@@ -66,6 +66,8 @@ BOOL CCheckersMFCDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	
+	this->OnBnClickedOpenstartup();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -178,6 +180,7 @@ void CCheckersMFCDlg::CreatePlayer2(CString name, int type) {
 
 void CCheckersMFCDlg::SetGameInProgress(bool inProgress) {
 	this->bGameInProcess = inProgress;
+	this->checkersField.SetGameInProgress(inProgress);
 	if (inProgress) {
 		this->mStartStopButton.SetWindowTextW(L"Остановить");
 	}

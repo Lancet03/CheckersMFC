@@ -24,9 +24,6 @@ IMPLEMENT_DYNAMIC(CCheckersField, CWnd)
 
 CCheckersField::CCheckersField()
 {
-	this->board = new Board();
-	this->fieldXSize = this->board->cells.size();
-	this->fieldYSize = this->board->cells[0].size();
 	this->nSelectedX = -1;
 	this->nSelectedY = -1;
 
@@ -80,6 +77,10 @@ BOOL CCheckersField::RegisterClass()
 
 void CCheckersField::OnPaint()
 {
+	Board* board = this->gameParent->GetBoard();
+	this->fieldXSize = board->cells.size();
+	this->fieldYSize = board->cells[0].size();
+
 	CPaintDC dc(this); // device context for painting
 	// TODO: Add your message handler code here
 	// Do not call CWnd::OnPaint() for painting messages
@@ -159,7 +160,7 @@ void CCheckersField::OnPaint()
 	for (int row = 0; row < this->fieldYSize; row++) {
 		for (int col = 0; col < this->fieldXSize; col++) {
 			CRect cellRect = this->GetRectFromField(col, row);
-			this->DrawChecker(this->board->cells[row][col], memDC, cellRect);
+			this->DrawChecker(board->cells[row][col], memDC, cellRect);
 		}
 	}
 
@@ -310,24 +311,24 @@ BOOL CCheckersField::OnEraseBkgnd(CDC* pDC)
 void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
-
-	int x, y;
 	CRect rect;
 	GetClientRect(&rect);
+
+	Board* board = this->gameParent->GetBoard();
 
 
 	if (point.x > FIELDNUMBERSPACE && point.y > FIELDNUMBERSPACE && point.x < rect.right - FIELDNUMBERSPACE && point.y < rect.bottom - FIELDNUMBERSPACE) {
 		CPoint p = this->GetFieldPosition(point);
 
 		if (this->selectedChecker != nullptr) {
-			EmptyCell* chosenCell = this->board->GetEmptyCell(p.x, p.y);
+			EmptyCell* chosenCell = board->GetEmptyCell(p.x, p.y);
 
-			if (!this->board->continuousJump) {
-				this->board->DeselectAllCheckers();
+			if (!board->continuousJump) {
+				board->DeselectAllCheckers();
 			}
 
 			if (chosenCell == nullptr) {
-				this->board->DeselectAllCheckers();
+				board->DeselectAllCheckers();
 				this->selectedChecker = nullptr;
 			}
 			else {
@@ -338,19 +339,21 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 							selectedChecker->Move(chosenCell->position.first, chosenCell->position.second);
 							if (selectedChecker->CanJumpAny()) {
 								selectedChecker->selected = true;
-								this->board->continuousJump = true;
+								board->continuousJump = true;
 							}
 							else {
-								this->board->ChangePlayerTurn();
+								board->ChangePlayerTurn();
+								this->gameParent->ChangePlayer();
 								this->selectedChecker = nullptr;
 							}
 							//return true;
 						}
 					}
-					else if (inRange == MoveTypes::RegularMove && !this->board->jumpExist) {
+					else if (inRange == MoveTypes::RegularMove && !board->jumpExist) {
 						if (!selectedChecker->CanJumpAny()) {
 							selectedChecker->Move(chosenCell->position.first, chosenCell->position.second);
-							this->board->ChangePlayerTurn();
+							board->ChangePlayerTurn();
+							this->gameParent->ChangePlayer();
 							this->selectedChecker = nullptr;
 							//return true;
 						}
@@ -359,18 +362,30 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 		else {
+			Player* currentPlayer = this->gameParent->GetCurrentPlayer();
+
 			Checker* chosenChecker = nullptr;
-			bool hasSelectedChecker = this->board->CheckIfPlayerHasSelectedCheckers();
+			bool hasSelectedChecker = board->CheckIfPlayerHasSelectedCheckers();
 
 			if (hasSelectedChecker) {
-				chosenChecker = this->board->GetSelectedChecker();
+				chosenChecker = board->GetSelectedChecker();
 			}
 			else {
-				chosenChecker = this->board->GetChecker(p.x, p.y);
+				
+				chosenChecker = board->GetChecker(p.x, p.y);
 			}
 
-			if ((!this->board->continuousJump || hasSelectedChecker) && chosenChecker != nullptr && chosenChecker->allowedToMove) {
-				this->board->DeselectAllCheckers();
+			if (chosenChecker == nullptr) {
+				return;
+			}
+
+			if (currentPlayer->cellType != chosenChecker->player) {
+				AfxMessageBox(L"Вы выбрали шашку другого игрока!");
+				return;
+			}
+
+			if ((!board->continuousJump || hasSelectedChecker) && chosenChecker != nullptr && chosenChecker->allowedToMove) {
+				board->DeselectAllCheckers();
 				this->selectedChecker = chosenChecker;
 				this->selectedChecker->selected = true;
 			}
@@ -400,7 +415,7 @@ void CCheckersField::SetGameInProgress(bool inProgress) {
 }
 
 bool CCheckersField::CheckEndCondition() {
-	Board* boart = this->gameParent->GetBoard();
+	Board* board = this->gameParent->GetBoard();
 	if (board->CheckEndCondition()) {
 		if (board->IsVictory()) {
 			CString str;
@@ -437,6 +452,7 @@ void CCheckersField::OnTimer(UINT_PTR nIDEvent)
 			}
 			else {
 				this->gameParent->ChangePlayer();
+				this->Invalidate();
 			}
 		}
 	}
