@@ -81,6 +81,9 @@
     <ClInclude Include="RandomPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CStartupDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CheckersMFC.cpp">
@@ -132,6 +135,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RandomPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CStartupDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

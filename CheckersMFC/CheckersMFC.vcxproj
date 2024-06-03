@@ -191,6 +191,7 @@
     <ClInclude Include="CheckersMFC.h" />
     <ClInclude Include="CheckersMFCDlg.h" />
     <ClInclude Include="ComputerPlayer.h" />
+    <ClInclude Include="CStartupDialog.h" />
     <ClInclude Include="DefaultPrinter.h" />
     <ClInclude Include="distance.h" />
     <ClInclude Include="EmptyCell.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="CheckersMFC.cpp" />
     <ClCompile Include="CheckersMFCDlg.cpp" />
     <ClCompile Include="ComputerPlayer.cpp" />
+    <ClCompile Include="CStartupDialog.cpp" />
     <ClCompile Include="DefaultPrinter.cpp" />
     <ClCompile Include="distance.cpp" />
     <ClCompile Include="EmptyCell.cpp" />

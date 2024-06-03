@@ -7,6 +7,7 @@
 #include "DefaultPrinter.h"
 #include "Checker.h"
 #include "EmptyCell.h"
+#include "CCheckersField.h"
 
 #include <typeinfo>
 #include <vector>
@@ -24,6 +25,8 @@ CCheckersField::CCheckersField()
 	this->fieldYSize = this->board->cells[0].size();
 	this->nSelectedX = -1;
 	this->nSelectedY = -1;
+
+	this->gameParent = nullptr;
 
 	this->printer = new DefaultPrinter();
 	this->RegisterClass();
@@ -372,4 +375,8 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 
 	CWnd::OnLButtonDown(nFlags, point);
+}
+
+void CCheckersField::SetGameParent(CCheckersMFCDlg* p) {
+	this->gameParent = p;
 }

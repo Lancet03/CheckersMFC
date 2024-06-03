@@ -7,6 +7,7 @@
 #include "CheckersMFC.h"
 #include "CheckersMFCDlg.h"
 #include "afxdialogex.h"
+#include "CStartupDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -34,6 +35,7 @@ BEGIN_MESSAGE_MAP(CCheckersMFCDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSELEAVE()
+	ON_BN_CLICKED(IDC_OPENSTARTUP, &CCheckersMFCDlg::OnBnClickedOpenstartup)
 END_MESSAGE_MAP()
 
 
@@ -42,6 +44,8 @@ END_MESSAGE_MAP()
 BOOL CCheckersMFCDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	this->checkersField.SetGameParent(this);
 
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
@@ -104,4 +108,17 @@ void CCheckersMFCDlg::OnMouseLeave()
 	// TODO: Add your message handler code here and/or call default
 
 	CDialogEx::OnMouseLeave();
+}
+
+
+void CCheckersMFCDlg::OnBnClickedOpenstartup()
+{
+	// TODO: Add your control notification handler code here
+	CStartupDialog sdlg;
+	sdlg.SetDlgParent(this);
+	int nRes = sdlg.DoModal();
+
+	if (nRes == IDOK) {
+
+	}
 }

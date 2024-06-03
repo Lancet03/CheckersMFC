@@ -2,8 +2,10 @@
 #include "Board.h"
 #include "Printer.h"
 #include "Checker.h"
+//#include "CheckersMFCDlg.h"
 
 // CCheckersField
+class CCheckersMFCDlg;
 
 class CCheckersField : public CWnd
 {
@@ -16,6 +18,8 @@ public:
 	
 protected:
 	DECLARE_MESSAGE_MAP()
+
+	CCheckersMFCDlg* gameParent;
 private:
 	int fieldXSize;
 	int fieldYSize;
@@ -24,6 +28,8 @@ private:
 	Printer* printer;
 
 	Checker* selectedChecker = nullptr;
+
+
 
 	BOOL RegisterClass();
 	Board* board;
@@ -36,6 +42,7 @@ public:
 	afx_msg void OnMouseLeave();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	void SetGameParent(CCheckersMFCDlg* p);
 };
 
 

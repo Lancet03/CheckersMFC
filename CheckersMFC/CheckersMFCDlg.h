@@ -5,6 +5,7 @@
 #pragma once
 #include "CCheckersField.h"
 
+//class CCheckersField {};
 
 // CCheckersMFCDlg dialog
 class CCheckersMFCDlg : public CDialogEx
@@ -32,6 +33,8 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnMouseLeave();
+	afx_msg void OnBnClickedOpenstartup();
 };
