@@ -20,8 +20,8 @@ protected:
 
 	
 private:
-	int fieldXSize;
-	int fieldYSize;
+	int fieldXSize = 0;
+	int fieldYSize = 0;
 	int nSelectedX;
 	int nSelectedY;
 	Printer* printer;
@@ -45,6 +45,7 @@ public:
 	void SetGameInProgress(bool inProgress);
 	bool CheckEndCondition();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 
 

@@ -45,6 +45,7 @@ BEGIN_MESSAGE_MAP(CCheckersField, CWnd)
 	ON_WM_ERASEBKGND()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_TIMER()
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 
@@ -78,8 +79,11 @@ BOOL CCheckersField::RegisterClass()
 void CCheckersField::OnPaint()
 {
 	Board* board = this->gameParent->GetBoard();
-	this->fieldXSize = board->cells.size();
-	this->fieldYSize = board->cells[0].size();
+
+	if (this->fieldXSize == 0 || this->fieldYSize == 0) {
+		this->fieldXSize = board->cells.size();
+		this->fieldYSize = board->cells[0].size();
+	}
 
 	CPaintDC dc(this); // device context for painting
 	// TODO: Add your message handler code here
@@ -451,11 +455,26 @@ void CCheckersField::OnTimer(UINT_PTR nIDEvent)
 				this->gameParent->Invalidate();
 			}
 			else {
-				this->gameParent->ChangePlayer();
+				Board* board = this->gameParent->GetBoard();
+				if (board->playerTurn != currentPlayer->cellType) {
+					this->gameParent->ChangePlayer();
+				}
+				
 				this->Invalidate();
 			}
 		}
 	}
 
 	CWnd::OnTimer(nIDEvent);
+}
+
+
+int CCheckersField::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CWnd::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  Add your specialized creation code here
+
+	return 0;
 }

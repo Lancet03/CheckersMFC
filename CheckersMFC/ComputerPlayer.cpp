@@ -25,7 +25,7 @@ bool ComputerPlayer::MakeMove() {
 	std::pair<int, int> moveToTilePos = checkerMove.moveToPos;
 	Checker* checkerToMove = this->board->GetChecker(checkerToMovePos.first, checkerToMovePos.second);
 	if (checkerToMove == nullptr) {
-		std::cerr << "Computer Player Error:: Should get Checker";
+		AfxMessageBox(L"Computer Player Error:: Should get Checker");
 		/*return false;*/
 	}
 
@@ -53,7 +53,8 @@ bool ComputerPlayer::MakeMove() {
 				return true;
 			}
 			else {
-				std::cerr << "Computer Player Error:: Вы должны атаковать!" << std::endl;
+				AfxMessageBox(L"Computer Player Error:: Вы должны атаковать!");
+				//std::cerr << "Computer Player Error:: Вы должны атаковать!" << std::endl;
 				return false;
 			}
 		}

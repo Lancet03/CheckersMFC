@@ -233,6 +233,7 @@ bool Board::CheckIfEmptyCellOnPosition(int x, int y) {
 
 bool Board::CheckIfPositionIsCorrect(std::string position) {
 	if (position.length() != 2) {
+
 		std::cout << "Введена слишком длинная строка" << std::endl;
 		return false;
 	}

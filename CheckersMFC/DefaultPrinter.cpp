@@ -3,7 +3,7 @@
 
 void DefaultPrinter::DrawWhiteCell(CDC& dc, CRect rect) {
 	CPen pen;
-	pen.CreatePen(PS_SOLID,	0, RGB(249, 241, 165));
+	pen.CreatePen(PS_SOLID,	1, RGB(249, 241, 165));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
 	CBrush brush;
 	brush.CreateSolidBrush(RGB(249, 241, 165));
@@ -31,10 +31,10 @@ void DefaultPrinter::DrawBlackCell(CDC& dc, CRect rect) {
 
 void DefaultPrinter::DrawAvailableToMoveCell(CDC& dc, CRect rect) {
 	CPen pen;
-	pen.CreatePen(PS_SOLID, 1, RGB(19, 255, 14));
+	pen.CreatePen(PS_SOLID, 2, RGB(19, 255, 14));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
 	CBrush brush;
-	brush.CreateSolidBrush(RGB(19, 161, 14));
+	brush.CreateSolidBrush(RGB(30, 170, 30));
 	HGDIOBJ oldBrush = dc.SelectObject(brush);
 	dc.Rectangle(rect);
 	dc.SelectObject(oldPen);
@@ -59,7 +59,7 @@ void DefaultPrinter::DrawWhiteChecker(CDC& dc, CRect rect) {
 
 void DefaultPrinter::DrawWhiteKingChecker(CDC& dc, CRect rect) {
 	CPen pen;
-	pen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
+	pen.CreatePen(PS_SOLID, 4, RGB(255, 0, 0));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
 	CBrush brush;
 	brush.CreateSolidBrush(RGB(242, 242, 242));
@@ -91,7 +91,7 @@ void DefaultPrinter::DrawSelectedWhiteKingChecker(CDC& dc, CRect rect) {
 	pen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
 	CBrush brush;
-	brush.CreateSolidBrush(RGB(240, 240, 240));
+	brush.CreateSolidBrush(RGB(230, 230, 230));
 	HGDIOBJ oldBrush = dc.SelectObject(brush);
 	dc.Ellipse(rect.left + 4, rect.top + 4, rect.right - 4, rect.bottom - 4);
 	dc.SelectObject(oldPen);
@@ -117,7 +117,7 @@ void DefaultPrinter::DrawBlackChecker(CDC& dc, CRect rect) {
 
 void DefaultPrinter::DrawBlackKingChecker(CDC& dc, CRect rect) {
 	CPen pen;
-	pen.CreatePen(PS_SOLID, 2, RGB(23, 23, 23));
+	pen.CreatePen(PS_SOLID, 4, RGB(255, 0, 0));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
 	CBrush brush;
 	brush.CreateSolidBrush(RGB(23, 23, 23));
@@ -131,7 +131,7 @@ void DefaultPrinter::DrawBlackKingChecker(CDC& dc, CRect rect) {
 
 void DefaultPrinter::DrawSelectedBlackChecker(CDC& dc, CRect rect) {
 	CPen pen;
-	pen.CreatePen(PS_SOLID, 2, RGB(50, 50, 50));
+	pen.CreatePen(PS_SOLID, 2, RGB(200, 200, 200));
 	HGDIOBJ oldPen = dc.SelectObject(pen);
 	CBrush brush;
 	brush.CreateSolidBrush(RGB(23, 23, 23));
