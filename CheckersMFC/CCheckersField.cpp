@@ -14,6 +14,7 @@
 
 #include <typeinfo>
 #include <vector>
+#include <thread>
 
 #define CHECKERSFIELD_CLASSNAME L"CheckersField"
 #define FIELDNUMBERSPACE 20
@@ -416,7 +417,7 @@ void CCheckersField::SetGameInProgress(bool inProgress) {
 		this->bGameInProgress = inProgress;
 		this->gameParent->SetGameInProgress(inProgress);
 		if (inProgress) {
-			SetTimer(TIMER_ID, 1000, NULL);
+			SetTimer(TIMER_ID, 100, NULL);
 		}
 		else {
 			KillTimer(TIMER_ID);
@@ -447,29 +448,45 @@ bool CCheckersField::CheckEndCondition() {
 
 void CCheckersField::OnTimer(UINT_PTR nIDEvent)
 {
-	// TODO: Add your message handler code here and/or call default
 	Player* currentPlayer = this->gameParent->GetCurrentPlayer();
 
-	if (this->bGameInProgress && typeid(*currentPlayer) == typeid(ComputerPlayer)) {
+	Board* board = this->gameParent->GetBoard();
+	if (board->playerTurn != currentPlayer->cellType) {
+		this->gameParent->ChangePlayer();
+		currentPlayer = this->gameParent->GetCurrentPlayer();
+	}
+
+	//std::thread t;
+	if (this->bGameInProgress && typeid(*currentPlayer) != typeid(HumanPlayer) && !this->notHumanPlayerMakesMove) {
 		if ((this->gameParent == nullptr) || (this->gameParent->GetBoard() == nullptr)) {
 			return;
 		}
 
-		if (currentPlayer->MakeMove() == true) {
+		//std::thread t([&]() {
+		this->notHumanPlayerMakesMove = true;
+		std::thread t([&]() {
+			Player* currentPlayer = this->gameParent->GetCurrentPlayer();
+			currentPlayer->MakeMove();
 			if (this->CheckEndCondition()) {
 				this->SetGameInProgress(false);
 				this->gameParent->Invalidate();
 			}
 			else {
-				Board* board = this->gameParent->GetBoard();
-				if (board->playerTurn != currentPlayer->cellType) {
-					this->gameParent->ChangePlayer();
-				}
+
 
 				this->Invalidate();
 			}
-		}
+
+			this->notHumanPlayerMakesMove = false;
+			});
+		t.detach();
+
+		
 	}
+
+	/*if (this->bGameInProgress && typeid(*currentPlayer) == typeid(ComputerPlayer)) {
+		t.join();
+	}*/
 
 	CWnd::OnTimer(nIDEvent);
 }

@@ -26,6 +26,8 @@ private:
 	int nSelectedY;
 	Printer* printer;
 
+	bool notHumanPlayerMakesMove = false;
+
 	Checker* selectedChecker = nullptr;
 	bool bGameInProgress = false;
 	CCheckersMFCDlg* gameParent;
