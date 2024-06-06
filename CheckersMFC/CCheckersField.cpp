@@ -435,7 +435,6 @@ bool CCheckersField::CheckEndCondition() {
 	Board* board = this->gameParent->GetBoard();
 	if (board->CheckEndCondition()) {
 		if (board->IsVictory()) {
-			this->Invalidate();
 			CString str;
 			int wonPlayer = board->CheckIfSomeoneWon();
 			this->bGameFinished = true;
@@ -443,6 +442,7 @@ bool CCheckersField::CheckEndCondition() {
 			Player* p2 = this->gameParent->GetPlayer2();
 			str.Format(L"Игрок %s победил!", wonPlayer == p1->cellType ? p1->GetName() : p2->GetName());
 			AfxMessageBox(str);
+			this->Invalidate();
 		}
 		else {
 			AfxMessageBox(L"Ничья");
@@ -458,6 +458,10 @@ bool CCheckersField::CheckEndCondition() {
 void CCheckersField::OnTimer(UINT_PTR nIDEvent)
 {
 	Player* currentPlayer = this->gameParent->GetCurrentPlayer();
+
+	if (this->bGameFinished) {
+		return;
+	}
 
 	Board* board = this->gameParent->GetBoard();
 	if (board->playerTurn != currentPlayer->cellType) {
