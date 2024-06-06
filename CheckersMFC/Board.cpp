@@ -93,7 +93,7 @@ Checker* Board::GetChecker(int x, int y) {
 }
 
 EmptyCell* Board::GetEmptyCell(int x, int y) {
-	if (this->CheckIfPositionOnBoard(x, y)) {
+	if (this->CheckIfPositionOnBoard(x, y) && this->CheckIfEmptyCellOnPosition(x, y)) {
 		EmptyCell* emptyCell = (EmptyCell*)this->cells[y][x];
 
 		return emptyCell;

@@ -25,7 +25,7 @@ CCheckersMFCDlg::CCheckersMFCDlg(CWnd* pParent /*=nullptr*/)
 	, strPlayerTurn(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	
+
 	this->board = nullptr;
 	this->player1 = nullptr;
 	this->player2 = nullptr;
@@ -82,7 +82,7 @@ BOOL CCheckersMFCDlg::OnInitDialog()
 		_T("Arial"));                 // lpszFacename
 
 	GetDlgItem(IDC_CURRENTPLAYER)->SetFont(&font);
-	
+
 	this->OnBnClickedOpenstartup();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -145,7 +145,7 @@ void CCheckersMFCDlg::OnMouseLeave()
 void CCheckersMFCDlg::OnBnClickedOpenstartup()
 {
 	// TODO: Add your control notification handler code here
-	
+
 
 	if (this->bGameInProcess) {
 		//this->Cleanup();

@@ -317,6 +317,10 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 	CRect rect;
 	GetClientRect(&rect);
 
+	if (this->notHumanPlayerMakesMove || this->bGameFinished) {
+		return;
+	}
+
 	Board* board = this->gameParent->GetBoard();
 
 	if (!this->bGameInProgress) {
@@ -330,9 +334,9 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 		if (this->selectedChecker != nullptr) {
 			EmptyCell* chosenCell = board->GetEmptyCell(p.x, p.y);
 
-			if (!board->continuousJump) {
-				board->DeselectAllCheckers();
-			}
+			//if (!board->continuousJump) {
+			//	board->DeselectAllCheckers();
+			//}
 
 			if (chosenCell == nullptr) {
 				board->DeselectAllCheckers();
@@ -355,6 +359,10 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 							}
 							//return true;
 						}
+						else {
+							board->DeselectAllCheckers();
+							this->selectedChecker = nullptr;
+						}
 					}
 					else if (inRange == MoveTypes::RegularMove && !board->jumpExist) {
 						if (!selectedChecker->CanJumpAny()) {
@@ -367,6 +375,11 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 					}
 					this->CheckEndCondition();
 				}
+				else {
+					board->DeselectAllCheckers();
+					this->selectedChecker = nullptr;
+				}
+
 			}
 		}
 		else {

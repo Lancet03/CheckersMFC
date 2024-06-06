@@ -30,6 +30,9 @@ MoveTypes Tile::InRange(Checker* checker) {
 	else if (distanceToChecker == 2 * std::sqrt(2)) {
 		return MoveTypes::Jump;
 	}
+	else {
+		return MoveTypes::Wrong;
+	}
 }
 
 void Tile::SetPostion(int x, int y) {
