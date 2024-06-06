@@ -84,10 +84,6 @@ void CCheckersField::OnPaint()
 		return;
 	}
 
-	this->fieldXSize = board->cells.size();
-	this->fieldYSize = board->cells[0].size();
-
-
 	CPaintDC dc(this); // device context for painting
 	// TODO: Add your message handler code here
 	// Do not call CWnd::OnPaint() for painting messages
@@ -369,6 +365,7 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 							//return true;
 						}
 					}
+					this->CheckEndCondition();
 				}
 			}
 		}
@@ -416,7 +413,7 @@ void CCheckersField::SetGameInProgress(bool inProgress) {
 	if (this->bGameInProgress != inProgress) {
 		this->bGameInProgress = inProgress;
 		this->gameParent->SetGameInProgress(inProgress);
-		if (inProgress) {
+		if (inProgress && !this->bGameFinished) {
 			SetTimer(TIMER_ID, 100, NULL);
 		}
 		else {
@@ -431,6 +428,7 @@ bool CCheckersField::CheckEndCondition() {
 		if (board->IsVictory()) {
 			CString str;
 			int wonPlayer = board->CheckIfSomeoneWon();
+			this->bGameFinished = true;
 			Player* p1 = this->gameParent->GetPlayer1();
 			Player* p2 = this->gameParent->GetPlayer2();
 			str.Format(L"Игрок %s победил!", wonPlayer == p1->cellType ? p1->GetName() : p2->GetName());
@@ -456,13 +454,11 @@ void CCheckersField::OnTimer(UINT_PTR nIDEvent)
 		currentPlayer = this->gameParent->GetCurrentPlayer();
 	}
 
-	//std::thread t;
 	if (this->bGameInProgress && typeid(*currentPlayer) != typeid(HumanPlayer) && !this->notHumanPlayerMakesMove) {
 		if ((this->gameParent == nullptr) || (this->gameParent->GetBoard() == nullptr)) {
 			return;
 		}
 
-		//std::thread t([&]() {
 		this->notHumanPlayerMakesMove = true;
 		std::thread t([&]() {
 			Player* currentPlayer = this->gameParent->GetCurrentPlayer();
@@ -481,12 +477,8 @@ void CCheckersField::OnTimer(UINT_PTR nIDEvent)
 			});
 		t.detach();
 
-		
-	}
 
-	/*if (this->bGameInProgress && typeid(*currentPlayer) == typeid(ComputerPlayer)) {
-		t.join();
-	}*/
+	}
 
 	CWnd::OnTimer(nIDEvent);
 }
@@ -500,4 +492,21 @@ int CCheckersField::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  Add your specialized creation code here
 
 	return 0;
+}
+
+void CCheckersField::Cleanup() {
+	this->selectedChecker = nullptr;
+
+	this->fieldXSize = 0;
+	this->fieldYSize = 0;
+	this->nSelectedX = -1;
+	this->nSelectedY = -1;
+	this->notHumanPlayerMakesMove = false;
+	this->bGameFinished = false;
+}
+
+void CCheckersField::InitializeField() {
+	Board* board = this->gameParent->GetBoard();
+	this->fieldXSize = board->cells.size();
+	this->fieldYSize = board->cells[0].size();
 }

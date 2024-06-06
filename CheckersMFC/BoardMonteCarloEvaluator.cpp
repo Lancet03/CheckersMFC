@@ -51,6 +51,9 @@ void BoardMonteCarloEvaluator::EvaluateBoard() {
 		else {
 			numDraws++;
 		}
+		delete p1;
+		delete p2;
+		delete b;
 
 		bGameFinished = true;
 		return;

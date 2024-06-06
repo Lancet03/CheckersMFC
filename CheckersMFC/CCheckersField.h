@@ -30,6 +30,7 @@ private:
 
 	Checker* selectedChecker = nullptr;
 	bool bGameInProgress = false;
+	bool bGameFinished = false;
 	CCheckersMFCDlg* gameParent;
 
 	BOOL RegisterClass();
@@ -38,6 +39,8 @@ private:
 	CPoint GetFieldPosition(CPoint point);
 	void HighlightSelection(CDC& dc);
 	void DrawChecker(Tile* tile, CDC& dc, CRect rect);
+
+	
 public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnMouseLeave();
@@ -48,6 +51,9 @@ public:
 	bool CheckEndCondition();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	
+	void Cleanup();
+	void InitializeField();
 };
 
 

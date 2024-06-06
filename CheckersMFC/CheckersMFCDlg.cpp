@@ -161,6 +161,7 @@ void CCheckersMFCDlg::OnBnClickedOpenstartup()
 
 void CCheckersMFCDlg::CreateBoard() {
 	this->board = new Board();
+	this->checkersField.InitializeField();
 }
 
 void CCheckersMFCDlg::CreatePlayer1(CString name, int type) {
@@ -213,6 +214,7 @@ void CCheckersMFCDlg::Cleanup() {
 		this->board = nullptr;
 	}
 	this->currentPlayer = nullptr;
+	this->checkersField.Cleanup();
 }
 
 
