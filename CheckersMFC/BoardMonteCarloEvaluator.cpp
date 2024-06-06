@@ -62,7 +62,6 @@ void BoardMonteCarloEvaluator::EvaluateBoard() {
 	int movesCount = 0;
 
 	while (!bGameFinished && movesCount < maxMovesCount) {
-		//while (!currentPlayer->MakeMove());
 		currentPlayer->MakeMove();
 
 		if (b->CheckEndCondition()) {
