@@ -49,13 +49,14 @@ public:
 	Player* GetPlayer2() { return this->player2; }
 	void SetGameInProgress(bool inProgress);
 	void ChangePlayer();
+	void Cleanup();
 private:
 	Board* board;
 	Player* player1;
 	Player* player2;
 	Player* currentPlayer;
 	bool bGameInProcess = false;
-	void Cleanup();
+	
 	void UpdateName();
 public:
 	afx_msg void OnDestroy();

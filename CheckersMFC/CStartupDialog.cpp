@@ -80,6 +80,11 @@ void CStartupDialog::OnBnClickedStartbutton()
 		return;
 	}
 
+	Board* board = this->dlgParent->GetBoard();
+	if (board != nullptr) {
+		this->dlgParent->Cleanup();
+	}
+
 	this->dlgParent->CreateBoard();
 	this->dlgParent->CreatePlayer1(this->strPlayerName1, mTypePlayer1.GetCurSel());
 	this->dlgParent->CreatePlayer2(this->strPlayerName2, mTypePlayer2.GetCurSel());

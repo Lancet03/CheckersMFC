@@ -132,7 +132,7 @@ void CCheckersMFCDlg::OnBnClickedOpenstartup()
 	
 
 	if (this->bGameInProcess) {
-		this->Cleanup();
+		//this->Cleanup();
 		this->SetGameInProgress(false);
 		this->Invalidate();
 	}
@@ -145,6 +145,14 @@ void CCheckersMFCDlg::OnBnClickedOpenstartup()
 			this->currentPlayer = this->player1;
 			this->SetGameInProgress(true);
 			this->UpdateName();
+			this->Invalidate();
+		}
+		else if (nRes == IDCANCEL) {
+			if (this->board == nullptr) {
+				EndDialog(0);
+			}
+
+			this->SetGameInProgress(true);
 			this->Invalidate();
 		}
 	}
@@ -187,7 +195,7 @@ void CCheckersMFCDlg::SetGameInProgress(bool inProgress) {
 	else {
 		this->mStartStopButton.SetWindowTextW(L"Запустить");
 
-		this->Cleanup();
+		//this->Cleanup();
 	}
 }
 

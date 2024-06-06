@@ -79,11 +79,13 @@ BOOL CCheckersField::RegisterClass()
 void CCheckersField::OnPaint()
 {
 	Board* board = this->gameParent->GetBoard();
-
-	if (this->fieldXSize == 0 || this->fieldYSize == 0) {
-		this->fieldXSize = board->cells.size();
-		this->fieldYSize = board->cells[0].size();
+	if (board == nullptr) {
+		return;
 	}
+
+	this->fieldXSize = board->cells.size();
+	this->fieldYSize = board->cells[0].size();
+
 
 	CPaintDC dc(this); // device context for painting
 	// TODO: Add your message handler code here
@@ -227,7 +229,7 @@ CRect CCheckersField::GetRectFromField(int x, int y) {
 	rect.top = FIELDNUMBERSPACE + y * vPartSize;
 	rect.right = FIELDNUMBERSPACE + ((x + 1) * hPartSize);
 	rect.bottom = FIELDNUMBERSPACE + ((y + 1) * vPartSize);
-	
+
 	return rect;
 }
 
@@ -320,6 +322,10 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 
 	Board* board = this->gameParent->GetBoard();
 
+	if (!this->bGameInProgress) {
+		CWnd::OnLButtonDown(nFlags, point);
+		return;
+	}
 
 	if (point.x > FIELDNUMBERSPACE && point.y > FIELDNUMBERSPACE && point.x < rect.right - FIELDNUMBERSPACE && point.y < rect.bottom - FIELDNUMBERSPACE) {
 		CPoint p = this->GetFieldPosition(point);
@@ -375,7 +381,7 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 				chosenChecker = board->GetSelectedChecker();
 			}
 			else {
-				
+
 				chosenChecker = board->GetChecker(p.x, p.y);
 			}
 
@@ -434,7 +440,7 @@ bool CCheckersField::CheckEndCondition() {
 		}
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -459,7 +465,7 @@ void CCheckersField::OnTimer(UINT_PTR nIDEvent)
 				if (board->playerTurn != currentPlayer->cellType) {
 					this->gameParent->ChangePlayer();
 				}
-				
+
 				this->Invalidate();
 			}
 		}
