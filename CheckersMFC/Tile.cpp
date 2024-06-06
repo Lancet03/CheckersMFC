@@ -40,11 +40,3 @@ void Tile::SetPostion(int x, int y) {
 	this->position.second = y;
 }
 
-std::string Tile::GetTextPosition() {
-	char xPos = 'A' + this->position.first;
-	char yPos = '1' + this->position.second;
-
-	std::string val = std::string(1, xPos) + yPos;
-
-	return val;
-}

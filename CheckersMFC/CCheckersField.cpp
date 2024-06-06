@@ -84,9 +84,7 @@ void CCheckersField::OnPaint()
 		return;
 	}
 
-	CPaintDC dc(this); // device context for painting
-	// TODO: Add your message handler code here
-	// Do not call CWnd::OnPaint() for painting messages
+	CPaintDC dc(this);
 
 	CDC memDC;
 	memDC.CreateCompatibleDC(&dc);
@@ -174,6 +172,7 @@ void CCheckersField::OnPaint()
 	memDC.SelectObject(pOldBitmap);
 }
 
+
 void CCheckersField::DrawChecker(Tile* tile, CDC& dc, CRect rect) {
 	if (typeid(*tile) == typeid(Checker)) {
 		Checker* checker = (Checker*)tile;
@@ -232,7 +231,6 @@ CRect CCheckersField::GetRectFromField(int x, int y) {
 
 void CCheckersField::OnMouseMove(UINT nFlags, CPoint point)
 {
-	// TODO: Add your message handler code here and/or call default
 	CPoint p = this->GetFieldPosition(point);
 	if ((this->nSelectedX != p.x) || (this->nSelectedY != p.y)) {
 		this->nSelectedX = p.x;
@@ -251,7 +249,6 @@ void CCheckersField::OnMouseMove(UINT nFlags, CPoint point)
 
 void CCheckersField::OnMouseLeave()
 {
-	// TODO: Add your message handler code here and/or call default
 	this->nSelectedX = -1;
 	this->nSelectedY = -1;
 	this->Invalidate();
@@ -306,7 +303,6 @@ BOOL CCheckersField::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: Add your message handler code here and/or call default
 
-	//return CWnd::OnEraseBkgnd(pDC);
 	return TRUE;
 }
 
@@ -439,6 +435,7 @@ bool CCheckersField::CheckEndCondition() {
 	Board* board = this->gameParent->GetBoard();
 	if (board->CheckEndCondition()) {
 		if (board->IsVictory()) {
+			this->Invalidate();
 			CString str;
 			int wonPlayer = board->CheckIfSomeoneWon();
 			this->bGameFinished = true;
@@ -450,6 +447,7 @@ bool CCheckersField::CheckEndCondition() {
 		else {
 			AfxMessageBox(L"Ничья");
 		}
+
 		return true;
 	}
 

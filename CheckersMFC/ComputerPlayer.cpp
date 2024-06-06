@@ -26,7 +26,7 @@ bool ComputerPlayer::MakeMove() {
 	Checker* checkerToMove = this->board->GetChecker(checkerToMovePos.first, checkerToMovePos.second);
 	if (checkerToMove == nullptr) {
 		AfxMessageBox(L"Computer Player Error:: Should get Checker");
-		/*return false;*/
+		return false;
 	}
 
 	EmptyCell* selectedCell = this->board->GetEmptyCell(moveToTilePos.first, moveToTilePos.second);
