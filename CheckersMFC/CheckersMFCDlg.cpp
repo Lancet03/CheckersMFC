@@ -20,8 +20,6 @@
 
 // CCheckersMFCDlg dialog
 
-
-
 CCheckersMFCDlg::CCheckersMFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CHECKERSMFC_DIALOG, pParent)
 	, strPlayerTurn(_T(""))
@@ -66,6 +64,24 @@ BOOL CCheckersMFCDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	CFont font;
+	font.CreateFont(
+		50,                        // nHeight
+		0,                         // nWidth
+		0,                         // nEscapement
+		0,                         // nOrientation
+		FW_NORMAL,                 // nWeight
+		FALSE,                     // bItalic
+		FALSE,                     // bUnderline
+		0,                         // cStrikeOut
+		ANSI_CHARSET,              // nCharSet
+		OUT_DEFAULT_PRECIS,        // nOutPrecision
+		CLIP_DEFAULT_PRECIS,       // nClipPrecision
+		DEFAULT_QUALITY,           // nQuality
+		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
+		_T("Arial"));                 // lpszFacename
+
+	GetDlgItem(IDC_CURRENTPLAYER)->SetFont(&font);
 	
 	this->OnBnClickedOpenstartup();
 
