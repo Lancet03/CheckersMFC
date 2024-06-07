@@ -148,7 +148,6 @@ void CCheckersMFCDlg::OnBnClickedOpenstartup()
 
 
 	if (this->bGameInProcess) {
-		//this->Cleanup();
 		this->SetGameInProgress(false);
 		this->Invalidate();
 	}

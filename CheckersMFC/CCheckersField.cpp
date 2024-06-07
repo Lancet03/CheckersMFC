@@ -330,15 +330,11 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 		if (this->selectedChecker != nullptr) {
 			EmptyCell* chosenCell = board->GetEmptyCell(p.x, p.y);
 
-			//if (!board->continuousJump) {
-			//	board->DeselectAllCheckers();
-			//}
-
-			if (chosenCell == nullptr) {
+			if (chosenCell == nullptr && !board->continuousJump) {
 				board->DeselectAllCheckers();
 				this->selectedChecker = nullptr;
 			}
-			else {
+			else if (chosenCell != nullptr) {
 				MoveTypes inRange = chosenCell->InRange(selectedChecker);
 				if (inRange != MoveTypes::Wrong) {
 					if (inRange == MoveTypes::Jump) {
@@ -353,9 +349,8 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 								this->gameParent->ChangePlayer();
 								this->selectedChecker = nullptr;
 							}
-							//return true;
 						}
-						else {
+						else if (!board->continuousJump) {
 							board->DeselectAllCheckers();
 							this->selectedChecker = nullptr;
 						}
@@ -366,12 +361,11 @@ void CCheckersField::OnLButtonDown(UINT nFlags, CPoint point)
 							board->ChangePlayerTurn();
 							this->gameParent->ChangePlayer();
 							this->selectedChecker = nullptr;
-							//return true;
 						}
 					}
 					this->CheckEndCondition();
 				}
-				else {
+				else if (!board->continuousJump) {
 					board->DeselectAllCheckers();
 					this->selectedChecker = nullptr;
 				}
@@ -437,6 +431,7 @@ bool CCheckersField::CheckEndCondition() {
 		if (board->IsVictory()) {
 			CString str;
 			int wonPlayer = board->CheckIfSomeoneWon();
+			this->SetGameInProgress(false);
 			this->bGameFinished = true;
 			Player* p1 = this->gameParent->GetPlayer1();
 			Player* p2 = this->gameParent->GetPlayer2();
